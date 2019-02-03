@@ -1,68 +1,57 @@
 import 'dart:io';
-import 'dart:convert';
+import 'dart:async';
+
+class ChainCalculator {
+  double _accumulator = 0.0;
+
+  ChainCalculator(double initVal) {
+    this._accumulator = initVal;
+  }
+
+  ChainCalculator add(double val) {
+    this._accumulator += val;
+    return this;
+  }
+
+  ChainCalculator subtract(double val) {
+    this._accumulator -= val;
+    return this;
+  }
+
+  double result() {
+    return this._accumulator;
+  }
+}
+
+class Calculator {
+  double _accumulator = 0;
+
+  Calculator(double startValue) {
+    this._accumulator = startValue;
+  }
+
+double add(double val) {
+  this._accumulator += val;
+  return this._accumulator;
+}
+
+double subtract(double val) {
+  this._accumulator -= val;
+  return this._accumulator;
+}
+
+  double result() {
+    return this._accumulator;
+  }
+}
 
 void main() {
-  downloadTextFileAndPrint();
 
-  downloadTextFileAndSave();
 
-  downloadBinaryFile();
+Calculator calculator = Calculator(0.0)
+    ..add(12.0)
+    ..subtract(10.0)
+    ..add(5.0)..subtract(8.0);
 
-  downloadFileUsingStreamPipe();
-}
-
-void downloadTextFileAndPrint() {
-  HttpClient client = new HttpClient();
-  client.getUrl(Uri.parse("https://fluttermaster.com/"))
-      .then((HttpClientRequest request) {
-        return request.close();
-      })
-          .then((HttpClientResponse response) {
-        response.transform(utf8.decoder).listen((contents) => print(contents));
-      });
-}
-
-void downloadTextFileAndSave() {
-  HttpClient client = new HttpClient();
-  var _downloadData = StringBuffer();
-  var fileSave = new File('./index.html');
-  client.getUrl(Uri.parse("https://fluttermaster.com/"))
-      .then((HttpClientRequest request) {
-        return request.close();
-      })
-      .then((HttpClientResponse response) {
-        response.transform(utf8.decoder).listen((d) => _downloadData.write(d),
-            onDone: () {
-              fileSave.writeAsString(_downloadData.toString());
-            }
-        );
-      });
-}
-
-void downloadBinaryFile() {
-  HttpClient client = new HttpClient();
-  var _downloadData = List<int>();
-  var fileSave = new File('./logo.png');
-  client.getUrl(Uri.parse("https://fluttermaster.com/wp-content/uploads/2018/08/fluttermaster.com-logo-web-header.png"))
-      .then((HttpClientRequest request) {
-        return request.close();
-      })
-      .then((HttpClientResponse response) {
-        response.listen((d) => _downloadData.addAll(d),
-            onDone: () {
-              fileSave.writeAsBytes(_downloadData);
-            }
-        );
-      });
-}
-
-void downloadFileUsingStreamPipe() {
-  HttpClient client = new HttpClient();
-  client.getUrl(Uri.parse("https://fluttermaster.com/wp-content/uploads/2018/08/fluttermaster.com-logo-web-header.png"))
-      .then((HttpClientRequest request) {
-        return request.close();
-      })
-      .then((HttpClientResponse response) {
-        response.pipe(new File('./logo_pipe.png').openWrite());
-      });
+print("Result: " + calculator.result().toString());
 }
