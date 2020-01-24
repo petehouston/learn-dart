@@ -11,6 +11,6 @@ build/
 doc/api/
 
 # IntelliJ
-.idea/
+.idea/*
 .DS_Store
 *.iml
